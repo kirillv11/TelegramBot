@@ -3,6 +3,7 @@ from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from config import API_TOKEN
 from random import randint
 import json
+# import wikipedia
 
 # t.me/ExplorationUniverseBot
 
@@ -18,7 +19,7 @@ async def start_command(message: Message):
     await message.answer("Hi!\nI'm EchoBot!\nPowered by aiogram.")
 
 
-@dp.message_handler(commands=['foto', 'get_foto'])
+@dp.message_handler(commands=['foto', 'get_foto', 'image'])
 async def space_image(message: Message):
     """
     This function return the random space image
@@ -32,8 +33,29 @@ async def space_image(message: Message):
             await message.answer_photo(photo, caption=f"<b>{templates['image'][number]['name']}</b>\n\n{templates['image'][number]['description']}")
 
     
-@dp.message_handler(commands=['fact'])
-async def space_fact(message: Message): ...
+@dp.message_handler(commands=['fact', 'get_foto'])
+async def space_fact(message: Message):
+    with open('data.json', encoding='utf-8') as file:
+        file_content = file.read()
+        templates = json.loads(file_content)
+        length = len(templates['facts'])
+        number = randint(0, length - 1)
+        await message.answer(f"<b>{templates['facts'][number]}</b>")
+
+
+@dp.message_handler(commands=['person'])
+async def person(message: Message):
+    with open('data.json', encoding='utf-8') as file:
+        file_content = file.read()
+        templates = json.loads(file_content)
+        length = len(templates['person'])
+        number = randint(0, length - 1)
+        await message.answer(f"<b>{templates['person'][number]['fullname']} ({templates['person'][number]['date']})</b>\n\n<a href=\"{templates['person'][number]['url']}\">читать подробнее</a>")
+
+
+@dp.message_handler()
+async def echo(message: Message):
+    await message.answer(message.text)
 
 
 if __name__ == '__main__':
