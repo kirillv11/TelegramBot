@@ -1,10 +1,9 @@
-from aiogram import Bot, Dispatcher, executor
-from aiogram.types import Message
-from config import API_TOKEN
 from random import randint
 import json
+from aiogram import Bot, Dispatcher, executor
+from aiogram.types import Message
 import wikipedia
-import requests
+from config import API_TOKEN
 
 # t.me/ExplorationUniverseBot
 
@@ -18,6 +17,14 @@ async def start_command(message: Message):
     This function will be called when user sends `/start` command
     """
     await message.answer("Здравствуйте! С помощью данного бота вы сможете изучить космос и увидеть уникальные фотографии. Весь список команд можно узнать в меню команд, около ввода сообщения, или ввести команду /help.")
+
+
+@dp.message_handler(commands=['help'])
+async def help_command(message: Message):
+    """
+    This function return hepl text
+    """
+    await message.answer("")
 
 
 @dp.message_handler(commands=['foto', 'get_foto', 'image'])
