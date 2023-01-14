@@ -1,9 +1,10 @@
 from aiogram import Bot, Dispatcher, executor
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message
 from config import API_TOKEN
 from random import randint
 import json
-# import wikipedia
+import wikipedia
+import requests
 
 # t.me/ExplorationUniverseBot
 
@@ -30,7 +31,10 @@ async def space_image(message: Message):
         length = len(templates['image'])
         number = randint(0, length - 1)
         with open(templates['image'][number]['path'], "rb") as photo:
-            await message.answer_photo(photo, caption=f"<b>{templates['image'][number]['name']}</b>\n\n{templates['image'][number]['description']}")
+            await message.answer_photo(photo, caption=f"""
+            <b>{templates['image'][number]['name']}</b>\n\n
+            {templates['image'][number]['description']}
+            """)
 
     
 @dp.message_handler(commands=['fact', 'get_foto'])
@@ -50,12 +54,15 @@ async def person(message: Message):
         templates = json.loads(file_content)
         length = len(templates['person'])
         number = randint(0, length - 1)
-        await message.answer(f"<b>{templates['person'][number]['fullname']} ({templates['person'][number]['date']})</b>\n\n<a href=\"{templates['person'][number]['url']}\">читать подробнее</a>")
+        with open(templates['person'][number]['path_image'], "rb") as photo:
+            await message.answer_photo(photo, caption=f"<b>{templates['person'][number]['fullname']}</b>\n\nГоды жизни: {templates['person'][number]['date']}\n\n<a href=\"{templates['person'][number]['url']}\">читать подробнее</a>")
 
 
 @dp.message_handler()
-async def echo(message: Message):
-    await message.answer(message.text)
+async def search_wikipedia(message: Message):
+    wikipedia.set_lang('ru')
+    response = wikipedia.page(message.text)
+    await message.answer(f"<b>{response.title}</b>\n\n{response.summary}\n\n{response.url}")
 
 
 if __name__ == '__main__':
