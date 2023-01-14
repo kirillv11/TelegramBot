@@ -15,15 +15,15 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=['start'])
 async def start_command(message: Message):
     """
-    This handler will be called when user sends `/start` or `/help` command
+    This function will be called when user sends `/start` command
     """
-    await message.answer("Hi!\nI'm EchoBot!\nPowered by aiogram.")
+    await message.answer("Здравствуйте! С помощью данного бота вы сможете изучить космос и увидеть уникальные фотографии. Весь список команд можно узнать в меню команд, около ввода сообщения, или ввести команду /help.")
 
 
 @dp.message_handler(commands=['foto', 'get_foto', 'image'])
 async def space_image(message: Message):
     """
-    This function return the random space image
+    This function retur random space image
     """
     with open('data.json', encoding='utf-8') as file:
         file_content = file.read()
@@ -39,6 +39,9 @@ async def space_image(message: Message):
     
 @dp.message_handler(commands=['fact', 'get_foto'])
 async def space_fact(message: Message):
+    """
+    This function return random fact about space
+    """
     with open('data.json', encoding='utf-8') as file:
         file_content = file.read()
         templates = json.loads(file_content)
@@ -49,6 +52,9 @@ async def space_fact(message: Message):
 
 @dp.message_handler(commands=['person'])
 async def person(message: Message):
+    """
+    This function return person Which is associated with space
+    """
     with open('data.json', encoding='utf-8') as file:
         file_content = file.read()
         templates = json.loads(file_content)
@@ -60,6 +66,9 @@ async def person(message: Message):
 
 @dp.message_handler()
 async def search_wikipedia(message: Message):
+    """
+    This function return wikipedia article
+    """
     wikipedia.set_lang('ru')
     response = wikipedia.page(message.text)
     await message.answer(f"<b>{response.title}</b>\n\n{response.summary}\n\n{response.url}")
