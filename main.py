@@ -38,10 +38,7 @@ async def space_image(message: Message):
         length = len(templates['image'])
         number = randint(0, length - 1)
         with open(templates['image'][number]['path'], "rb") as photo:
-            await message.answer_photo(photo, caption=f"""
-            <b>{templates['image'][number]['name']}</b>\n\n
-            {templates['image'][number]['description']}
-            """)
+            await message.answer_photo(photo, caption=f"<b>{templates['image'][number]['name']}</b>\n\n{templates['image'][number]['description']}")
 
     
 @dp.message_handler(commands=['fact', 'get_foto'])
