@@ -5,6 +5,7 @@ from aiogram.types import Message
 import wikipedia
 from config import API_TOKEN
 
+
 # t.me/ExplorationUniverseBot
 
 # Initialize bot and dispatcher
@@ -24,7 +25,7 @@ async def help_command(message: Message):
     """
     This function return hepl text
     """
-    await message.answer("/start - запуск\n/foto - случайное фото\n/fact - случайный факт\n/person - случайный человек, который связан с исследованием вселенной\nзапрос без /, например 'солнце' - вернёт ответ на запрос")
+    await message.answer("/start - запуск\n/foto - случайное фото\n/fact - случайный факт\n/person - случайный человек, который связан с исследованием вселенной\nзапрос без /, например 'солнце', - вернёт ответ на запрос")
 
 
 @dp.message_handler(commands=['foto', 'get_foto', 'image'])
@@ -51,7 +52,7 @@ async def space_fact(message: Message):
         templates = json.loads(file_content)
         length = len(templates['facts'])
         number = randint(0, length - 1)
-        await message.answer(f"{templates['facts'][number]}")
+        await message.answer(f"<b>Интересный факт</b>\n\n{templates['facts'][number]}")
 
 
 @dp.message_handler(commands=['person'])
@@ -73,9 +74,12 @@ async def search_wikipedia(message: Message):
     """
     This function return wikipedia article
     """
-    wikipedia.set_lang('ru')
-    response = wikipedia.page(message.text)
-    await message.answer(f"<b>{response.title}</b>\n\n{response.summary}\n\n<a href=\"{response.url}\">читать подробнее</a>")
+    try:
+        wikipedia.set_lang('ru')
+        response = wikipedia.page(message.text)
+        await message.answer(f"<b>{response.title}</b>\n\n{response.summary}\n\n<a href=\"{response.url}\">читать подробнее</a>")
+    except:
+        await message.answer(f"Ошибка! Ответ на запрос '{message.text}' не найден.")
 
 
 if __name__ == '__main__':
